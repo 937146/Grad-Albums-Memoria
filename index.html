@@ -1,0 +1,218 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Album For Graduation</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="app">
+    <header>
+      <h1>Graduation Album — Create your Polaroid</h1>
+      <p class="muted">Upload a childhood photo, optionally add your recent photo, choose year & strand, add a quote, optionally request a song (admin will add it manually).</p>
+    </header>
+
+    <main class="layout">
+      <!-- LEFT: Form -->
+      <section class="formcard">
+        <form id="gradForm" novalidate>
+          <!-- Student Info -->
+          <fieldset>
+            <legend>Student Info</legend>
+
+            <label for="firstName">First name *</label>
+            <input id="firstName" name="firstName" required autocomplete="given-name">
+
+            <label for="middleName">Middle name (optional)</label>
+            <input id="middleName" name="middleName" autocomplete="additional-name">
+
+            <label for="lastName">Last name *</label>
+            <input id="lastName" name="lastName" required autocomplete="family-name">
+
+            <label for="instagram">Instagram handle (required) — include @</label>
+            <input id="instagram" name="instagram" placeholder="@yourhandle" required>
+          </fieldset>
+
+          <!-- Year & Strand -->
+          <fieldset>
+            <legend>Graduation & Strand</legend>
+
+            <label for="gradYear">Graduation Year *</label>
+            <select id="gradYear" required></select>
+
+            <label for="strand">Strand / Track *</label>
+            <select id="strand" required>
+              <option value="">-- select strand --</option>
+              <option value="STEM">STEM (Science, Technology, Engineering & Math)</option>
+              <option value="ABM">ABM (Accountancy, Business & Management)</option>
+              <option value="GAS">GAS (General Academic Strand)</option>
+              <option value="HUMSS">HUMSS (Humanities & Social Sciences)</option>
+              <option value="TVL-HE">TVL – HE (Home Economics)</option>
+              <option value="TVL-ICT">TVL – ICT (Information & Communication Technology)</option>
+            </select>
+
+            <label class="checkbox"><input type="checkbox" id="includeStrandBadge"> Add a strand badge to my polaroid (optional)</label>
+
+            <div id="strandColorOptions" class="inline-options" aria-hidden="false">
+              <label><input type="radio" name="strandColorMode" value="strand" checked> Strand color</label>
+              <label><input type="radio" name="strandColorMode" value="gold"> Gold with shine</label>
+            </div>
+          </fieldset>
+
+          <!-- Photos -->
+          <fieldset>
+            <legend>Photos & framing</legend>
+
+            <label for="childPhoto">Childhood / Baby photo (required)</label>
+            <input type="file" id="childPhoto" accept="image/*" required>
+
+            <div class="preview-controls" aria-hidden="false">
+              <label>Zoom</label>
+              <input type="range" id="childZoom" min="100" max="200" value="100">
+              <label>Pan X</label>
+              <input type="range" id="childPanX" min="-50" max="50" value="0">
+              <label>Pan Y</label>
+              <input type="range" id="childPanY" min="-50" max="50" value="0">
+            </div>
+
+            <label for="recentPhoto">Recent / Current photo (optional)</label>
+            <input type="file" id="recentPhoto" accept="image/*">
+
+            <div class="preview-controls" aria-hidden="false">
+              <label>Zoom</label>
+              <input type="range" id="recentZoom" min="100" max="200" value="100">
+              <label>Pan X</label>
+              <input type="range" id="recentPanX" min="-50" max="50" value="0">
+              <label>Pan Y</label>
+              <input type="range" id="recentPanY" min="-50" max="50" value="0">
+            </div>
+          </fieldset>
+
+          <!-- Quote + Quote Generator -->
+          <fieldset>
+            <legend>Graduation Quote</legend>
+            <label for="quote">Graduation quote (displayed on card)</label>
+            <textarea id="quote" rows="3" placeholder="Write your graduation quote..."></textarea>
+
+            <div class="quote-generator">
+              <button type="button" id="openQuoteGenerator" class="btn-outline">Need help? Generate quotes</button>
+              <div id="quoteGeneratorPanel" class="quote-panel" style="display:none">
+                <p class="muted small">Click any quote to insert it into the quote box. You can refresh up to <span id="quoteRefreshCount">10</span> times.</p>
+                <div id="quoteList" class="quote-list">
+                  <!-- JS populates 7 quotes here -->
+                </div>
+                <div style="margin-top:8px">
+                  <button id="refreshQuotesBtn" class="btn-outline">Refresh quotes (<span id="quotesLeft">10</span> left)</button>
+                  <button id="closeQuotesBtn" class="btn-ghost">Close</button>
+                </div>
+              </div>
+            </div>
+          </fieldset>
+
+          <!-- Song request: optional (metadata only) -->
+          <fieldset>
+            <legend>Song for your album (optional)</legend>
+
+            <label class="checkbox">
+              <input type="checkbox" id="wantSong"> I want to add a song to my album (optional)
+            </label>
+
+            <div id="songFields" style="display:none; margin-top:8px;">
+              <label for="songTitleInput">Song title (as on Instagram)</label>
+              <input id="songTitleInput" placeholder="e.g. Ivy">
+
+              <label for="songArtistInput">Artist / Author</label>
+              <input id="songArtistInput" placeholder="e.g. Frank Ocean">
+
+              <label for="songLyricInput">Lyric line (optional)</label>
+              <input id="songLyricInput" placeholder="e.g. 'You ain't a kid no more'">
+
+              <p class="muted" style="font-size:12px;margin-top:8px;">
+                Note: You will be manually tagged/posted on Instagram with the chosen song. Make sure the song is available on Instagram. If your IG account is private you may not be tagged.
+              </p>
+            </div>
+          </fieldset>
+
+          <!-- Template / Polaroid Style -->
+          <fieldset>
+            <legend>Polaroid Style</legend>
+            <label>Choose a template</label>
+            <div class="template-options">
+              <label><input type="radio" name="template" value="aesthetic" checked> A — Aesthetic (soft pastel, rounded)</label>
+              <label><input type="radio" name="template" value="premium"> B — Premium (white border, gold accents)</label>
+              <label><input type="radio" name="template" value="minimal"> C — Minimal (clean, modern)</label>
+            </div>
+
+            <label style="margin-top:8px">Polaroid color theme</label>
+            <select id="polaroidTheme">
+              <option value="white">Premium White (aesthetic)</option>
+              <option value="black">Premium Black (luxury)</option>
+              <option value="blue">Premium Blue (royal gradient)</option>
+              <option value="classic">Classic White</option>
+            </select>
+          </fieldset>
+
+          <!-- Actions -->
+          <div class="actions">
+            <button class="btn-primary" type="submit">Preview Submission</button>
+            <button type="button" id="resetBtn" class="btn-ghost">Reset</button>
+          </div>
+        </form>
+      </section>
+
+      <!-- RIGHT: Preview -->
+      <aside class="previewcard">
+        <h2>Live Preview (Page 1 & Page 2)</h2>
+
+        <div id="previewArea" class="previewArea">
+          <!-- PAGE 1: Childhood Polaroid -->
+          <div class="polaroid" id="polaroidChild" aria-live="polite">
+            <div class="polaroid-photo-container">
+              <div class="polaroid-photo-mask" id="childMask">
+                <img id="childPreviewImg" src="" alt="Child preview image">
+              </div>
+              <div class="class-overlay" id="childOverlay">────── <span id="childOverlayText">Class of 2026</span> ──────</div>
+              <div id="strandBadgeChild" class="strand-badge" style="display:none">STEM</div>
+            </div>
+            <div class="polaroid-meta">
+              <div class="student-name" id="namePreview">Your Name</div>
+              <div class="student-strand" id="strandPreview">STEM (Science, Technology...)</div>
+              <div class="student-quote" id="quotePreview">"Your graduation quote"</div>
+              <div class="song-preview" id="songPreview" style="display:none"></div>
+            </div>
+          </div>
+
+          <!-- PAGE 2: Recent Photo -->
+          <div class="polaroid small" id="polaroidRecent" aria-live="polite">
+            <div class="polaroid-photo-container">
+              <div class="polaroid-photo-mask" id="recentMask">
+                <img id="recentPreviewImg" src="" alt="Recent preview image">
+              </div>
+              <div class="class-overlay small" id="recentOverlay">────── <span id="recentOverlayText">Class of 2026</span> ──────</div>
+            </div>
+            <div class="polaroid-meta">
+              <div class="student-name small" id="namePreview2">Your Name</div>
+              <div class="student-strand small" id="strandPreview2">STEM</div>
+            </div>
+          </div>
+        </div>
+
+        <div id="finalActions" class="finalActions" style="display:none">
+          <p class="muted">If everything looks good you can download the final images or submit.</p>
+          <button id="downloadChild" class="btn-outline">Download Page 1</button>
+          <button id="downloadRecent" class="btn-outline">Download Page 2</button>
+          <button id="downloadMeta" class="btn-outline">Download Submission Metadata (JSON)</button>
+        </div>
+      </aside>
+    </main>
+
+    <footer>
+      <small>Made for your school — keep privacy in mind. Private IG accounts cannot be tagged automatically.</small>
+    </footer>
+  </div>
+
+  <!-- link to JS (I will provide the final script.js next) -->
+  <script src="script.js"></script>
+</body>
+</html>
