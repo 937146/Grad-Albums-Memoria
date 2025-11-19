@@ -88,6 +88,23 @@
               <input type="range" id="recentPanY" min="-50" max="50" value="0">
             </div>
           </fieldset>
+<!-- Graduation Year -->
+<fieldset>
+  <legend>Graduation Year</legend>
+
+  <label for="gradYear">Select your year</label>
+  <select id="gradYear" required>
+    <option value="" disabled selected>Select your graduation year</option>
+    <option value="2024">2024</option>
+    <option value="2025">2025</option>
+    <option value="2026">2026</option>
+  </select>
+
+  <p class="muted small">
+    Year options change automatically every July.  
+    After June 30, 2026 → 2026 will disappear and 2027 will appear.
+  </p>
+</fieldset>
 
           <!-- Quote + Quote Generator -->
           <fieldset>
