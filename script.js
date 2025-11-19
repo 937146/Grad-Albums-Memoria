@@ -69,6 +69,41 @@ document.getElementById("refreshQuotesBtn").onclick = () => {
     alert("You have reached the maximum number of refreshes (10).");
     return;
   }
+/* ------------------------------
+   GRADUATION YEAR AUTO-GENERATOR
+--------------------------------*/
+
+function generateGradYears() {
+  const gradYearSelect = document.getElementById("gradYear");
+  gradYearSelect.innerHTML = ""; // clear
+
+  const today = new Date();
+  const currentYear = today.getFullYear();
+  const month = today.getMonth() + 1;  // 1–12
+  const day = today.getDate();
+
+  let years = [];
+
+  // CASE 1 — before June 30, include the current year
+  if (month < 7 || (month === 6 && day <= 30)) {
+    years = [currentYear, currentYear + 1, currentYear + 2];
+  } 
+  
+  // CASE 2 — after June 30, remove the current year
+  else {
+    years = [currentYear + 1, currentYear + 2, currentYear + 3];
+  }
+
+  // Add years to dropdown
+  years.forEach(y => {
+    const op = document.createElement("option");
+    op.value = y;
+    op.textContent = y;
+    gradYearSelect.appendChild(op);
+  });
+}
+
+generateGradYears();
 
   quoteRefreshCount++;
   document.getElementById("quotesLeft").textContent = maxQuoteRefresh - quoteRefreshCount;
