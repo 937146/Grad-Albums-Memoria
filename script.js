@@ -1,198 +1,74 @@
 document.addEventListener("DOMContentLoaded", () => {
+    const generateBtn = document.getElementById("generateBtn");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const quoteDisplay = document.getElementById("quoteDisplay");
+    const nameInput = document.getElementById("name");
+    const nicknameInput = document.getElementById("nickname");
+    const strandInput = document.getElementById("strand");
+    const gradYearInput = document.getElementById("gradYear");
+    const pfpInput = document.getElementById("pfpInput");
+    const outputPfp = document.getElementById("outputPfp");
+    const quotesLeft = document.getElementById("quotesLeft");
 
-  /* ------------------------------
-     1. GRAD YEAR GENERATION
-  ------------------------------ */
-  const gradYearSelect = document.getElementById("gradYear");
-  const currentYear = new Date().getFullYear();
-  const nextYear = currentYear + 1;
+    let refreshCount = 3;
 
-  // Only show future years
-  for (let y = currentYear; y <= currentYear + 3; y++) {
-    const option = document.createElement("option");
-    option.value = y;
-    option.textContent = y;
-    gradYearSelect.appendChild(option);
-  }
+    const quotes = [
+        "Success is not final, failure is not fatal.",
+        "The best view comes after the hardest climb.",
+        "Stay curious, stay determined.",
+        "One day or day one – you choose.",
+        "Dream big. Work hard. Stay humble.",
+        "Your future is created by what you do today."
+    ];
 
-  /* ------------------------------
-     2. QUOTE GENERATOR
-  ------------------------------ */
-
-  const openQuoteBtn = document.getElementById("openQuoteGenerator");
-  const quotePanel = document.getElementById("quoteGeneratorPanel");
-  const quoteList = document.getElementById("quoteList");
-  const refreshBtn = document.getElementById("refreshQuotesBtn");
-  const closeBtn = document.getElementById("closeQuotesBtn");
-  const quoteInput = document.getElementById("quote");
-
-  let refreshCount = 10;
-
-  const QUOTES = [
-    "The future belongs to those who believe in their dreams.",
-    "Small steps every day lead to big results.",
-    "Success isn’t final; failure isn’t fatal.",
-    "I didn’t come this far to only come this far.",
-    "Every ending is a new beginning.",
-    "Be brave enough to start a new chapter.",
-    "Dream big. Work hard. Stay humble.",
-    "Your only limit is you.",
-    "Collect moments, not things.",
-    "Doubt kills more dreams than failure ever will.",
-    "Focus on the step in front of you, not the whole staircase.",
-    "One day, you’ll look back and be glad you didn’t give up.",
-    "The comeback is always stronger than the setback.",
-    "Be proud of how far you’ve come.",
-    "Chase the vision, not the approval."
-  ];
-
-  function generateQuotes() {
-    quoteList.innerHTML = "";
-    let shuffled = [...QUOTES].sort(() => Math.random() - 0.5);
-    let seven = shuffled.slice(0, 7);
-
-    seven.forEach(q => {
-      const div = document.createElement("div");
-      div.className = "quote-item";
-      div.textContent = q;
-      div.addEventListener("click", () => {
-        quoteInput.value = q;
-      });
-      quoteList.appendChild(div);
-    });
-  }
-
-  openQuoteBtn.addEventListener("click", () => {
-    quotePanel.style.display = "block";
-    generateQuotes();
-  });
-
-  closeBtn.addEventListener("click", () => {
-    quotePanel.style.display = "none";
-  });
-
-  refreshBtn.addEventListener("click", () => {
-    if (refreshCount <= 0) return;
-
-    refreshCount--;
-    document.getElementById("quotesLeft").textContent = refreshCount;
-
-    generateQuotes();
-  });
-
-  /* ------------------------------
-     3. SONG OPTIONAL FIELDS
-  ------------------------------ */
-  const wantSong = document.getElementById("wantSong");
-  const songFields = document.getElementById("songFields");
-
-  wantSong.addEventListener("change", () => {
-    songFields.style.display = wantSong.checked ? "block" : "none";
-  });
-
-  /* ------------------------------
-     4. LIVE PREVIEW (Name, Strand, Quote, Song)
-  ------------------------------ */
-  const firstName = document.getElementById("firstName");
-  const middleName = document.getElementById("middleName");
-  const lastName = document.getElementById("lastName");
-
-  const namePreview = document.getElementById("namePreview");
-  const namePreview2 = document.getElementById("namePreview2");
-
-  function updateName() {
-    let full = firstName.value + " " + (middleName.value || "") + " " + lastName.value;
-    namePreview.textContent = full.trim();
-    namePreview2.textContent = full.trim();
-  }
-
-  firstName.addEventListener("input", updateName);
-  middleName.addEventListener("input", updateName);
-  lastName.addEventListener("input", updateName);
-
-  /* STRAND PREVIEW */
-  const strand = document.getElementById("strand");
-  const strandPreview = document.getElementById("strandPreview");
-  const strandPreview2 = document.getElementById("strandPreview2");
-
-  strand.addEventListener("change", () => {
-    strandPreview.textContent = strand.value;
-    strandPreview2.textContent = strand.value;
-  });
-
-  /* QUOTE PREVIEW */
-  const quotePreview = document.getElementById("quotePreview");
-  quoteInput.addEventListener("input", () => {
-    quotePreview.textContent = `"${quoteInput.value}"`;
-  });
-
-  /* SONG PREVIEW */
-  const songPreview = document.getElementById("songPreview");
-  const songTitleInput = document.getElementById("songTitleInput");
-  const songArtistInput = document.getElementById("songArtistInput");
-  const songLyricInput = document.getElementById("songLyricInput");
-
-  function updateSong() {
-    if (!wantSong.checked) {
-      songPreview.style.display = "none";
-      return;
-    }
-    songPreview.style.display = "block";
-
-    let text = `${songTitleInput.value || ""} — ${songArtistInput.value || ""}`;
-    if (songLyricInput.value) {
-      text += ` (“${songLyricInput.value}”)`;
+    function generateRandomQuote() {
+        const randomIndex = Math.floor(Math.random() * quotes.length);
+        return quotes[randomIndex];
     }
 
-    songPreview.textContent = text;
-  }
+    generateBtn.addEventListener("click", (event) => {
+        event.preventDefault(); // ⛔ stops page reload
 
-  songTitleInput.addEventListener("input", updateSong);
-  songArtistInput.addEventListener("input", updateSong);
-  songLyricInput.addEventListener("input", updateSong);
-  wantSong.addEventListener("change", updateSong);
+        const name = nameInput.value.trim();
+        const nickname = nicknameInput.value.trim();
+        const strand = strandInput.value.trim();
+        const gradYear = gradYearInput.value.trim();
 
+        if (!name || !strand || !gradYear) {
+            quoteDisplay.textContent = "Please fill in all required fields.";
+            return;
+        }
 
-  /* ------------------------------
-     5. IMAGE UPLOAD & PREVIEW
-  ------------------------------ */
-  function setupImageUpload(idInput, idImg, maskId, zoomId, panXId, panYId) {
-    const input = document.getElementById(idInput);
-    const img = document.getElementById(idImg);
-    const mask = document.getElementById(maskId);
-    const zoom = document.getElementById(zoomId);
-    const panX = document.getElementById(panXId);
-    const panY = document.getElementById(panYId);
+        const quote = generateRandomQuote();
 
-    input.addEventListener("change", () => {
-      const file = input.files[0];
-      if (!file) return;
-      img.src = URL.createObjectURL(file);
+        quoteDisplay.innerHTML = `
+            <strong>${name}</strong> (${nickname || "No nickname"})<br>
+            Strand: ${strand}<br>
+            Graduation: ${gradYear}<br><br>
+            <em>"${quote}"</em>
+        `;
     });
 
-    function updateTransform() {
-      img.style.transform =
-        `scale(${zoom.value / 100}) translate(${panX.value}px, ${panY.value}px)`;
-    }
+    refreshBtn.addEventListener("click", (event) => {
+        event.preventDefault(); // ⛔ stops page from refreshing
 
-    zoom.addEventListener("input", updateTransform);
-    panX.addEventListener("input", updateTransform);
-    panY.addEventListener("input", updateTransform);
-  }
+        if (refreshCount <= 0) return;
 
-  setupImageUpload("childPhoto", "childPreviewImg", "childMask", "childZoom", "childPanX", "childPanY");
-  setupImageUpload("recentPhoto", "recentPreviewImg", "recentMask", "recentZoom", "recentPanX", "recentPanY");
+        refreshCount--;
+        quotesLeft.textContent = refreshCount;
 
+        const newQuote = generateRandomQuote();
+        quoteDisplay.innerHTML = `<em>"${newQuote}"</em>`;
+    });
 
-  /* ------------------------------
-     6. YEAR PREVIEW UPDATE
-  ------------------------------ */
-  const childOverlayText = document.getElementById("childOverlayText");
-  const recentOverlayText = document.getElementById("recentOverlayText");
+    pfpInput.addEventListener("change", (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
 
-  gradYearSelect.addEventListener("change", () => {
-    childOverlayText.textContent = `Class of ${gradYearSelect.value}`;
-    recentOverlayText.textContent = `Class of ${gradYearSelect.value}`;
-  });
-
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            outputPfp.src = e.target.result;
+        };
+        reader.readAsDataURL(file);
+    });
 });
