@@ -1,74 +1,110 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const generateBtn = document.getElementById("generateBtn");
-    const refreshBtn = document.getElementById("refreshBtn");
-    const quoteDisplay = document.getElementById("quoteDisplay");
-    const nameInput = document.getElementById("name");
-    const nicknameInput = document.getElementById("nickname");
-    const strandInput = document.getElementById("strand");
-    const gradYearInput = document.getElementById("gradYear");
-    const pfpInput = document.getElementById("pfpInput");
-    const outputPfp = document.getElementById("outputPfp");
-    const quotesLeft = document.getElementById("quotesLeft");
+  /* --------------------------
+     IMAGE PREVIEW HANDLERS
+  ---------------------------*/
+  function setupImagePreview(inputId, imgId) {
+    const input = document.getElementById(inputId);
+    const img = document.getElementById(imgId);
 
-    let refreshCount = 3;
+    if (!input || !img) return;
 
-    const quotes = [
-        "Success is not final, failure is not fatal.",
-        "The best view comes after the hardest climb.",
-        "Stay curious, stay determined.",
-        "One day or day one – you choose.",
-        "Dream big. Work hard. Stay humble.",
-        "Your future is created by what you do today."
-    ];
+    input.addEventListener("change", () => {
+      const file = input.files[0];
+      if (!file) return;
 
-    function generateRandomQuote() {
-        const randomIndex = Math.floor(Math.random() * quotes.length);
-        return quotes[randomIndex];
+      const reader = new FileReader();
+      reader.onload = () => (img.src = reader.result);
+      reader.readAsDataURL(file);
+    });
+  }
+
+  setupImagePreview("childPhoto", "childPreview");
+  setupImagePreview("recentPhoto", "recentPreview");
+
+  /* --------------------------
+     QUOTE GENERATOR LOGIC
+  ---------------------------*/
+  const openBtn = document.getElementById("openQuoteGenerator");
+  const panel = document.getElementById("quoteGeneratorPanel");
+  const list = document.getElementById("quoteList");
+  const refreshBtn = document.getElementById("refreshQuotesBtn");
+  const closeBtn = document.getElementById("closeQuotesBtn");
+  const quoteBox = document.getElementById("quote");
+
+  let refreshCount = 10;
+
+  const QUOTES = [
+    "The future belongs to those who believe in the beauty of their dreams.",
+    "This is not the end, but a new beginning.",
+    "Dream big, work hard, stay humble.",
+    "The best view comes after the hardest climb.",
+    "Go confidently in the direction of your dreams.",
+    "Success is not final; failure is not fatal.",
+    "Your journey is just beginning.",
+    "Make today so awesome that yesterday gets jealous.",
+    "Every accomplishment starts with the decision to try.",
+    "If you can dream it, you can do it.",
+    "Your potential is endless.",
+    "Be fearless in the pursuit of what sets your soul on fire.",
+    "Do something today that your future self will thank you for.",
+    "The world is yours—go take it.",
+    "Your story is just starting."
+  ];
+
+  function generateQuotes() {
+    list.innerHTML = "";
+
+    const set = [];
+
+    // randomly choose 7 quotes
+    while (set.length < 7) {
+      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
+      if (!set.includes(q)) set.push(q);
     }
 
-    generateBtn.addEventListener("click", (event) => {
-        event.preventDefault(); // ⛔ stops page reload
+    // print the quotes
+    set.forEach(q => {
+      const p = document.createElement("p");
+      p.className = "quote-item";
+      p.textContent = q;
 
-        const name = nameInput.value.trim();
-        const nickname = nicknameInput.value.trim();
-        const strand = strandInput.value.trim();
-        const gradYear = gradYearInput.value.trim();
+      p.addEventListener("click", () => {
+        quoteBox.value = q;
+      });
 
-        if (!name || !strand || !gradYear) {
-            quoteDisplay.textContent = "Please fill in all required fields.";
-            return;
-        }
-
-        const quote = generateRandomQuote();
-
-        quoteDisplay.innerHTML = `
-            <strong>${name}</strong> (${nickname || "No nickname"})<br>
-            Strand: ${strand}<br>
-            Graduation: ${gradYear}<br><br>
-            <em>"${quote}"</em>
-        `;
+      list.appendChild(p);
     });
+  }
 
-    refreshBtn.addEventListener("click", (event) => {
-        event.preventDefault(); // ⛔ stops page from refreshing
+  // OPEN generator
+  openBtn.addEventListener("click", () => {
+    panel.style.display = "block";
+    generateQuotes();
+  });
 
-        if (refreshCount <= 0) return;
+  // CLOSE generator
+  closeBtn.addEventListener("click", () => {
+    panel.style.display = "none";
+  });
 
-        refreshCount--;
-        quotesLeft.textContent = refreshCount;
+  // REFRESH quotes **without reloading page**
+  refreshBtn.addEventListener("click", (e) => {
+    e.preventDefault(); // ← prevents page refresh
 
-        const newQuote = generateRandomQuote();
-        quoteDisplay.innerHTML = `<em>"${newQuote}"</em>`;
-    });
+    if (refreshCount <= 0) return;
+    refreshCount--;
 
-    pfpInput.addEventListener("change", (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
+    document.getElementById("quotesLeft").textContent = refreshCount;
 
-        const reader = new FileReader();
-        reader.onload = function(e) {
-            outputPfp.src = e.target.result;
-        };
-        reader.readAsDataURL(file);
-    });
+    generateQuotes();
+  });
+
+  /* --------------------------
+      FORM SUBMIT (Preview)
+  ---------------------------*/
+  document.getElementById("gradForm").addEventListener("submit", (e) => {
+    e.preventDefault();
+
+    alert("Your card is generated and shown on the right!");
+  });
 });
