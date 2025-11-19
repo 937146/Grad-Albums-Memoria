@@ -1,0 +1,300 @@
+/* RESET */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  background: #fafafa;
+  font-family: "Inter", system-ui, sans-serif;
+  color: #333;
+  padding: 16px;
+  line-height: 1.4;
+}
+
+/* APP WRAPPER */
+.app {
+  max-width: 1250px;
+  margin: auto;
+}
+
+/* HEADER */
+header {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+header h1 {
+  font-size: 26px;
+  margin-bottom: 6px;
+  font-weight: 700;
+}
+
+.muted {
+  color: #777;
+}
+
+.small {
+  font-size: 13px;
+}
+
+/* LAYOUT */
+.layout {
+  display: flex;
+  gap: 20px;
+}
+
+.formcard, .previewcard {
+  background: white;
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+}
+
+.formcard {
+  width: 45%;
+  max-height: 85vh;
+  overflow-y: auto;
+}
+
+.previewcard {
+  width: 55%;
+}
+
+/* FIELDSETS */
+fieldset {
+  border: 1px solid #ddd;
+  padding: 14px;
+  border-radius: 10px;
+  margin-bottom: 16px;
+}
+
+legend {
+  font-weight: 600;
+  padding: 0 6px;
+}
+
+/* INPUTS */
+label {
+  display: block;
+  margin-top: 10px;
+  font-weight: 500;
+}
+
+input, select, textarea {
+  width: 100%;
+  margin-top: 5px;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.checkbox {
+  display: flex;
+  gap: 8px;
+  font-weight: 500;
+  margin-top: 10px;
+}
+
+textarea {
+  resize: vertical;
+}
+
+/* BUTTONS */
+.btn-primary {
+  background: #000;
+  color: white;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-outline {
+  background: none;
+  border: 1px solid #444;
+  padding: 8px 12px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-ghost {
+  background: none;
+  border: none;
+  color: #444;
+  cursor: pointer;
+}
+
+/* PREVIEW */
+.previewArea {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  align-items: center;
+}
+
+/* POLAROID STYLE */
+.polaroid {
+  width: 350px;
+  background: white;
+  padding: 14px;
+  border-radius: 12px;
+  box-shadow: 0px 10px 20px rgba(0,0,0,0.15);
+  border: 1px solid #ececec;
+  text-align: center;
+}
+
+.polaroid.small {
+  width: 260px;
+  padding: 10px;
+}
+
+.polaroid-photo-container {
+  position: relative;
+  width: 100%;
+  height: 350px;
+  overflow: hidden;
+  border-radius: 12px;
+}
+
+.polaroid.small .polaroid-photo-container {
+  height: 240px;
+}
+
+/* Mask for zoom/pan */
+.polaroid-photo-mask {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}
+
+.polaroid-photo-mask img {
+  position: absolute;
+  width: 100%;
+  height: auto;
+  left: 0;
+  top: 0;
+}
+
+/* CLASS OF OVERLAY */
+.class-overlay {
+  position: absolute;
+  bottom: 8px;
+  width: 100%;
+  text-align: center;
+  font-weight: 700;
+  color: #C9A44A; /* gold */
+  text-shadow: 0 0 4px rgba(0,0,0,0.3);
+  font-size: 15px;
+}
+
+.class-overlay.small {
+  font-size: 13px;
+  bottom: 5px;
+}
+
+/* NAME & QUOTE */
+.polaroid-meta {
+  margin-top: 12px;
+}
+
+.student-name {
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.student-name.small {
+  font-size: 16px;
+}
+
+.student-strand {
+  font-size: 14px;
+  color: #444;
+  margin-top: 4px;
+}
+
+.student-strand.small {
+  font-size: 12px;
+}
+
+.student-quote {
+  margin-top: 10px;
+  font-style: italic;
+  font-size: 14px;
+  color: #444;
+}
+
+/* SONG PREVIEW */
+.song-preview {
+  margin-top: 6px;
+  font-size: 12px;
+  color: #222;
+  opacity: 0.8;
+}
+
+/* STRAND BADGE */
+.strand-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  padding: 6px 10px;
+  font-size: 13px;
+  font-weight: 700;
+  color: white;
+  border-radius: 6px;
+  background: #aaa;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.4);
+}
+
+/* Quote Generator Panel */
+.quote-panel {
+  background: #fff;
+  padding: 14px;
+  border-radius: 10px;
+  margin-top: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.quote-list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.quote-item {
+  padding: 8px;
+  background: #f3f3f3;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 13px;
+}
+
+.quote-item:hover {
+  background: #e7e7e7;
+}
+
+/* ACTIONS */
+.actions {
+  margin-top: 18px;
+  display: flex;
+  gap: 10px;
+}
+
+/* MOBILE */
+@media (max-width: 850px) {
+  .layout {
+    flex-direction: column;
+  }
+  .formcard, .previewcard {
+    width: 100%;
+  }
+  .polaroid {
+    width: 95%;
+  }
+}
