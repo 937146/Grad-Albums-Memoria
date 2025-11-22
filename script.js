@@ -1,110 +1,129 @@
-document.addEventListener("DOMContentLoaded", () => {
-  /* --------------------------
-     IMAGE PREVIEW HANDLERS
-  ---------------------------*/
-  function setupImagePreview(inputId, imgId) {
-    const input = document.getElementById(inputId);
-    const img = document.getElementById(imgId);
+// ----------------------------
+// GRAD ALBUM SCRIPT (FULL)
+// ----------------------------
 
-    if (!input || !img) return;
-
-    input.addEventListener("change", () => {
-      const file = input.files[0];
-      if (!file) return;
-
-      const reader = new FileReader();
-      reader.onload = () => (img.src = reader.result);
-      reader.readAsDataURL(file);
-    });
-  }
-
-  setupImagePreview("childPhoto", "childPreview");
-  setupImagePreview("recentPhoto", "recentPreview");
-
-  /* --------------------------
-     QUOTE GENERATOR LOGIC
-  ---------------------------*/
-  const openBtn = document.getElementById("openQuoteGenerator");
-  const panel = document.getElementById("quoteGeneratorPanel");
-  const list = document.getElementById("quoteList");
-  const refreshBtn = document.getElementById("refreshQuotesBtn");
-  const closeBtn = document.getElementById("closeQuotesBtn");
-  const quoteBox = document.getElementById("quote");
-
-  let refreshCount = 10;
-
-  const QUOTES = [
-    "The future belongs to those who believe in the beauty of their dreams.",
-    "This is not the end, but a new beginning.",
-    "Dream big, work hard, stay humble.",
-    "The best view comes after the hardest climb.",
-    "Go confidently in the direction of your dreams.",
-    "Success is not final; failure is not fatal.",
-    "Your journey is just beginning.",
-    "Make today so awesome that yesterday gets jealous.",
-    "Every accomplishment starts with the decision to try.",
-    "If you can dream it, you can do it.",
-    "Your potential is endless.",
-    "Be fearless in the pursuit of what sets your soul on fire.",
-    "Do something today that your future self will thank you for.",
-    "The world is yours—go take it.",
-    "Your story is just starting."
-  ];
-
-  function generateQuotes() {
-    list.innerHTML = "";
-
-    const set = [];
-
-    // randomly choose 7 quotes
-    while (set.length < 7) {
-      const q = QUOTES[Math.floor(Math.random() * QUOTES.length)];
-      if (!set.includes(q)) set.push(q);
-    }
-
-    // print the quotes
-    set.forEach(q => {
-      const p = document.createElement("p");
-      p.className = "quote-item";
-      p.textContent = q;
-
-      p.addEventListener("click", () => {
-        quoteBox.value = q;
-      });
-
-      list.appendChild(p);
-    });
-  }
-
-  // OPEN generator
-  openBtn.addEventListener("click", () => {
-    panel.style.display = "block";
-    generateQuotes();
-  });
-
-  // CLOSE generator
-  closeBtn.addEventListener("click", () => {
-    panel.style.display = "none";
-  });
-
-  // REFRESH quotes **without reloading page**
-  refreshBtn.addEventListener("click", (e) => {
-    e.preventDefault(); // ← prevents page refresh
-
-    if (refreshCount <= 0) return;
-    refreshCount--;
-
-    document.getElementById("quotesLeft").textContent = refreshCount;
-
-    generateQuotes();
-  });
-
-  /* --------------------------
-      FORM SUBMIT (Preview)
-  ---------------------------*/
-  document.getElementById("gradForm").addEventListener("submit", (e) => {
-    e.preventDefault();
-
-    alert("Your card is generated and shown on the right!");
-  });
+// ========== GRAD YEAR DROPDOWN ==========
+const gradYearSelect = document.getElementById("gradYear");
+[2026, 2027, 2028].forEach(y => {
+  const opt = document.createElement("option");
+  opt.value = y;
+  opt.textContent = y;
+  gradYearSelect.appendChild(opt);
 });
+
+// ========== LIVE NAME PREVIEW ==========
+const first = document.getElementById("firstName");
+const middle = document.getElementById("middleName");
+const last = document.getElementById("lastName");
+
+function updateNamePreview() {
+  const full = `${first.value} ${middle.value ? middle.value + " " : ""}${last.value}`.trim();
+  document.getElementById("namePreview").textContent = full || "Your Name";
+  document.getElementById("namePreview2").textContent = full || "Your Name";
+}
+
+[first, middle, last].forEach(i => i.addEventListener("input", updateNamePreview));
+
+// ========== STRAND PREVIEW ==========
+const strandSelect = document.getElementById("strand");
+strandSelect.addEventListener("change", () => {
+  let v = strandSelect.value;
+  document.getElementById("strandPreview").textContent = v || "";
+  document.getElementById("strandPreview2").textContent = v || "";
+});
+
+// ========== CLASS YEAR PREVIEW ==========
+gradYearSelect.addEventListener("change", () => {
+  const y = gradYearSelect.value || "2026";
+  document.getElementById("childOverlayText").textContent = "Class of " + y;
+  document.getElementById("recentOverlayText").textContent = "Class of " + y;
+});
+
+// ========== PHOTO UPLOADS ==========
+function loadImage(input, imgElement) {
+  const file = input.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    imgElement.src = e.target.result;
+  };
+  reader.readAsDataURL(file);
+}
+
+document.getElementById("childPhoto").addEventListener("change", () => {
+  loadImage(document.getElementById("childPhoto"), document.getElementById("childPreviewImg"));
+});
+
+document.getElementById("recentPhoto").addEventListener("change", () => {
+  loadImage(document.getElementById("recentPhoto"), document.getElementById("recentPreviewImg"));
+});
+
+// ========== QUOTE GENERATOR ==========
+const openBtn = document.getElementById("openQuoteGenerator");
+const closeBtn = document.getElementById("closeQuotesBtn");
+const refreshBtn = document.getElementById("refreshQuotesBtn");
+const quotePanel = document.getElementById("quoteGeneratorPanel");
+const quoteList = document.getElementById("quoteList");
+const quoteBox = document.getElementById("quote");
+
+let refreshCount = 10;
+
+openBtn.addEventListener("click", () => {
+  quotePanel.style.display = "block";
+});
+
+closeBtn.addEventListener("click", () => {
+  quotePanel.style.display = "none";
+});
+
+// ========== QUOTE LIST ==========
+const quotes = [
+  "The future is mine to create.",
+  "Small steps still move forward.",
+  "Everything I am becoming matters.",
+  "I didn’t come this far to only come this far.",
+  "Watch me grow.",
+  "Built from pressure.",
+  "Better things begin here.",
+  "My story just upgraded.",
+  "Trust the process, even the slow parts.",
+  "Dreams don’t work unless you do."
+];
+
+function loadQuotes() {
+  quoteList.innerHTML = "";
+  for (let i = 0; i < 7; i++) {
+    const q = quotes[Math.floor(Math.random() * quotes.length)];
+    const div = document.createElement("div");
+    div.className = "quote-item";
+    div.textContent = q;
+
+    div.addEventListener("click", () => {
+      quoteBox.value = q;
+      document.getElementById("quotePreview").textContent = `"${q}"`;
+    });
+
+    quoteList.appendChild(div);
+  }
+}
+
+loadQuotes();
+
+// Prevent refresh button from refreshing the whole page
+refreshBtn.addEventListener("click", (e) => {
+  e.preventDefault();   // ← THIS FIXES YOUR PROBLEM
+
+  if (refreshCount <= 0) return;
+
+  refreshCount--;
+  document.getElementById("quotesLeft").textContent = refreshCount;
+
+  loadQuotes();
+});
+
+// Update quote in preview live
+quoteBox.addEventListener("input", () => {
+  document.getElementById("quotePreview").textContent =
+    quoteBox.value ? `"${quoteBox.value}"` : `"Your graduation quote"`;
+});
+
